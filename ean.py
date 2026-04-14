@@ -597,8 +597,49 @@ class Pair[P, T]:
     def __repr__(self) -> str:
         return f"Pair({self.first}, {self.second})"
 
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Pair):
+            return self.first == other.first and self.second == other.second
+        return False
+
+    def __ne__(self, other: object) -> bool:
+        return not self.__eq__(other)
+
+    def __contains__(self, item: P | T) -> bool:
+        return item in (self.first, self.second)
+
+    def __hash__(self) -> int:
+        return hash((self.first, self.second))
+
+    def __getattr__(self, name: str) -> P | T:
+        if name == "primero" or name == "suma" or name == "tamaño":
+            return self.first
+        elif name == "segundo" or name == "contador":
+            return self.second
+        else:
+            raise AttributeError(f"El atributo {name} no existe en el pair")
+
+    def __setattr__(self, name: str, value: P | T) -> None:
+        if name == "first" or name == "primero" or name == "suma" or name == "tamaño":
+            super().__setattr__("first", value)
+        elif name == "second" or name == "segundo" or name == "contador":
+            super().__setattr__("second", value)
+        else:
+            raise AttributeError(f"El atributo {name} no existe en el pair")
+
 # ----------------------------------------------------------------------------------------
 # Un vector es una estructura de datos lineal, parecida a un arreglo, pero con
 # la capacidad de eliminar y agregar en posiciones específicas de la estructura
 # de datos
 # ----------------------------------------------------------------------------------------
+
+if __name__ == '__main__':
+    print("Hola mundo")
+    p = Pair[int, str](10, "Hola")
+    print(p.suma)
+    print(p.contador)
+    p.suma += 1
+    p.contador = "diana"
+    print(p)
+    p.primero = 20
+    print(p.first)
